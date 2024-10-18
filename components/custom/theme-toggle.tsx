@@ -1,7 +1,12 @@
-"use client";
+/* eslint-disable import/no-unresolved */
+'use client';
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+
+// eslint-disable-next-line import/no-unresolved
+import { Button } from '@/components/ui/button';
+import { IconMoon, IconSun } from '@/components/ui/icons';
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
@@ -16,13 +21,19 @@ export function ThemeToggle() {
   }
 
   return (
-    <div
-      className="cursor-pointer"
+    <Button
+      size="sm"
+      variant="ghost"
       onClick={() => {
-        setTheme(theme === "dark" ? "light" : "dark");
+        setTheme(theme === 'light' ? 'dark' : 'light');
       }}
     >
-      {`Toggle ${theme === "light" ? "dark" : "light"} mode`}
-    </div>
+      {!theme ? null : theme === 'dark' ? (
+        <IconMoon className="transition-all" />
+      ) : (
+        <IconSun className="transition-all" />
+      )}
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   );
 }

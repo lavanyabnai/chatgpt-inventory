@@ -3,8 +3,11 @@
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import cx from "classnames";
 import Link from "next/link";
+// eslint-disable-next-line import/order
 import { useParams, usePathname } from "next/navigation";
-import { User } from "next-auth";
+// import { User } from "next-auth";
+
+
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
@@ -18,7 +21,7 @@ import {
   MoreHorizontalIcon,
   PencilEditIcon,
   TrashIcon,
-} from "./icons";
+} from "../custom/icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +46,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "../ui/sheet";
+
+// eslint-disable-next-line import/no-unresolved
+// eslint-disable-next-line import/no-unresolved
 
 export const History = ({ user }: { user: User | undefined }) => {
   const { id } = useParams();
@@ -129,7 +135,7 @@ export const History = ({ user }: { user: User | undefined }) => {
                 className="font-normal text-sm flex flex-row justify-between"
                 asChild
               >
-                <Link href="/">
+                <Link href="/chat">
                   <div>Start a new chat</div>
                   <PencilEditIcon size={14} />
                 </Link>
