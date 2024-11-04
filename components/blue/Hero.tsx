@@ -40,13 +40,13 @@ export function Hero() {
                   Generative AI Capabilities
                 </Button> */}
                 <Button variant="secondary" className={undefined}>
-                  <Link href="/snop/master">Sales & Operation Planning</Link>
+                  <Link href="">Sales & Operation Planning</Link>
                 </Button>
                 <Button className={undefined}>
-                  <Link href="/inventory/dashboard">Availability Analytics</Link>
+                  <Link href="/risk/analysis">Availability Analytics</Link>
                 </Button>
                 <Button className={undefined}>
-                  <Link href="/network/overall">e2e Supply Chain</Link>
+                  <Link href="">e2e Supply Chain</Link>
                 </Button>
               </div>
             </div>

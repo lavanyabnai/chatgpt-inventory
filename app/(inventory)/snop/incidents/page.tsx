@@ -9,7 +9,6 @@ import {
 import { useState, Fragment } from 'react';
 
 import taskData from '@/app/data/columndata/tasks.json';
-
 import { columns } from '@/components/datatable/columns-inci';
 import { DataTable } from '@/components/datatable/data-table-inci';
 

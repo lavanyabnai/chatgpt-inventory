@@ -5,10 +5,9 @@ import { useChat } from "ai/react";
 import { useState } from "react";
 
 import { Message as PreviewMessage } from "@/components/custom/message";
+import { MultimodalInput } from "@/components/custom/multimodal-input";
+import { Overview } from "@/components/custom/overview";
 import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
-
-import { MultimodalInput } from "./multimodal-input";
-import { Overview } from "./overview";
 
 export function Chat({
   id,
