@@ -8,11 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { distanceCoverageByDemands as distanceByDemandSchema } from '@/db/schema';
-import { useBulkCreateDistancebydemands } from '@/features/distancebydemands/api/use-bulk-create-distancebydemands';
-import { useBulkDeleteDistancebydemands } from '@/features/distancebydemands/api/use-bulk-delete-distancebydemands';
-import { useGetDistancebydemands } from '@/features/distancebydemands/api/use-get-distancebydemands';
-import { useNewDistancebydemand } from '@/features/distancebydemands/hooks/use-new-distancebydemand';
+import { indicatorConstraints as indicatorconstraintSchema } from '@/db/schema';
+import { useBulkCreateIndicatorconstraints } from '@/features/indicatorconstraints/api/use-bulk-create-indicatorconstraints';
+import { useBulkDeleteIndicatorconstraints } from '@/features/indicatorconstraints/api/use-bulk-delete-indicatorconstraints';
+import { useGetIndicatorconstraints } from '@/features/indicatorconstraints/api/use-get-indicatorconstraints';
+import { useNewIndicatorconstraint } from '@/features/indicatorconstraints/hooks/use-new-indicatorconstraint';
 
 import { columns } from './columns';
 import { ImportCard } from './import-card';
@@ -29,7 +29,8 @@ const INITIAL_IMPORT_RESULTS = {
   meta: {}
 };
 
-export default function FacilitiesPage() {
+export default function IndicatorconstraintsPage() {
+  // const [AccountDialog, confirm] = useSelectAccount();
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
@@ -43,16 +44,17 @@ export default function FacilitiesPage() {
     setVariant(VARIANTS.LIST);
   };
 
-  const newDistancebydemand = useNewDistancebydemand();
-  const createDistancebydemands = useBulkCreateDistancebydemands();
-  const deleteDistancebydemands = useBulkDeleteDistancebydemands();
-  const distancebydemandsQuery = useGetDistancebydemands();
-  const distancebydemands = distancebydemandsQuery.data || [];
+  const newIndicatorconstraint = useNewIndicatorconstraint();
+  const createIndicatorconstraints = useBulkCreateIndicatorconstraints();
+  const deleteIndicatorconstraints = useBulkDeleteIndicatorconstraints();
+  const indicatorconstraintsQuery = useGetIndicatorconstraints();
+  const indicatorconstraints = indicatorconstraintsQuery.data || [];
 
-  const isDisabled = distancebydemandsQuery.isLoading || deleteDistancebydemands.isPending;
+  const isDisabled =
+    indicatorconstraintsQuery.isLoading || deleteIndicatorconstraints.isPending;
 
   const onSubmitImport = async (
-    values: (typeof distanceByDemandSchema.$inferInsert)[]
+    values: (typeof indicatorconstraintSchema.$inferInsert)[]
   ) => {
     // const accountId = await confirm();
 
@@ -62,17 +64,16 @@ export default function FacilitiesPage() {
 
     const data = values.map((value) => ({
       ...value
-      // accountId: accountId as string
     }));
 
-    createDistancebydemands.mutate(data, {
+    createIndicatorconstraints.mutate(data, {
       onSuccess: () => {
         onCancelImport();
       }
     });
   };
 
-  if (distancebydemandsQuery.isLoading) {
+  if (indicatorconstraintsQuery.isLoading) {
     return (
       <div className="max-w-screen-6xl mx-auto w-full pb-10 -mt-24">
         <Card className="border-none drop-shadow-sm">
@@ -104,11 +105,13 @@ export default function FacilitiesPage() {
 
   return (
     <div className="max-w-screen-6xl mx-auto w-full">
-      <div className="flex flex-col px-4 py-2 m-0.5 lg:flex-row lg:items-center lg:justify-between">
-        <CardTitle className="text-xl line-clamp-1">Distance by Demand List</CardTitle>
+      <div className="flex flex-col  px-4 py-2 m-0.5 lg:flex-row lg:items-center lg:justify-between">
+        <CardTitle className="text-xl line-clamp-1">
+          Indicator Constraints Table
+        </CardTitle>
         <div className="flex flex-col lg:flex-row gap-2 items-center">
           <Button
-            onClick={newDistancebydemand.onOpen}
+            onClick={newIndicatorconstraint.onOpen}
             size="sm"
             className="w-full lg:w-auto"
           >
@@ -121,13 +124,12 @@ export default function FacilitiesPage() {
       <Separator />
       <div className="px-4">
         <DataTable
-          placeHolder="site name"
-          filterKey="siteName"
+          filterKey="ifConditionId"
           columns={columns}
-          data={distancebydemands}
+          data={indicatorconstraints}
           onDelete={(row) => {
             const ids = row.map((r) => r.original.id);
-            deleteDistancebydemands.mutate({ ids });
+            deleteIndicatorconstraints.mutate({ ids });
           }}
           disabled={isDisabled}
         />

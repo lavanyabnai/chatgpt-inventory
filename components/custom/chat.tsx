@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Attachment, Message } from "ai";
-import { useChat } from "ai/react";
-import { useState } from "react";
+import { Attachment, Message } from 'ai';
+import { useChat } from 'ai/react';
+import { useState } from 'react';
 
-import { Message as PreviewMessage } from "@/components/custom/message";
-import { MultimodalInput } from "@/components/custom/multimodal-input";
-import { Overview } from "@/components/custom/overview";
-import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
+import { Message as PreviewMessage } from '@/components/custom/message';
+import { MultimodalInput } from '@/components/custom/multimodal-input';
+import { Overview } from '@/components/custom/overview';
+import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
 
 export function Chat({
   id,
-  initialMessages,
+  initialMessages
 }: {
   id: string;
   initialMessages: Array<Message>;
@@ -21,8 +21,8 @@ export function Chat({
       body: { id },
       initialMessages,
       onFinish: () => {
-        window.history.replaceState({}, "", `/chat/${id}`);
-      },
+        window.history.replaceState({}, '', `/chat/${id}`);
+      }
     });
 
   const [messagesContainerRef, messagesEndRef] =

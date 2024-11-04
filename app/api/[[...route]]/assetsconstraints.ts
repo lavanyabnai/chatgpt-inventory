@@ -6,41 +6,41 @@ import { z } from 'zod';
 
 import { db } from '@/db/drizzle';
 import {
-  distanceCoverageByDemands,
-  facilities,
-  insertDistanceCoverageByDemandSchema
+  assetsConstraints,
+  groups,
+  insertAssetsConstraintSchema
 } from '@/db/schema';
 
-const patchDistanceSchema = z.object({
-  siteId: z.number(),
-  siteName: z.string().optional(),
-  demandPercentage: z.number().optional(),
-  demandM3: z.number().optional(),
-  distanceToSiteKm: z.number().optional()
+const patchAssetsConstraintSchema = z.object({
+  groupId: z.number().optional(),
+  minDcs: z.number().optional(),
+  maxDcs: z.number().optional(),
+  timePeriod: z.string().optional(),
+  inclusionType: z.enum(['Include', 'Exclude', 'Consider']).optional()
 });
 
 const app = new Hono()
   .get('/', clerkMiddleware(), async (c) => {
     const auth = getAuth(c);
+
     if (!auth?.userId) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
+
     const data = await db
       .select({
-        id: distanceCoverageByDemands.id,
-        siteId: distanceCoverageByDemands.siteId,
-        siteName: distanceCoverageByDemands.siteName,
-        demandPercentage: distanceCoverageByDemands.demandPercentage,
-        demandM3: distanceCoverageByDemands.demandM3,
-        distanceToSiteKm: distanceCoverageByDemands.distanceToSiteKm,
-        updatedAt: distanceCoverageByDemands.updatedAt,
-        facilityName: facilities.name
+        id: assetsConstraints.id,
+        groupId: assetsConstraints.groupId,
+        minDcs: assetsConstraints.minDcs,
+        maxDcs: assetsConstraints.maxDcs,
+        timePeriod: assetsConstraints.timePeriod,
+        inclusionType: assetsConstraints.inclusionType,
+        createdAt: assetsConstraints.createdAt,
+        updatedAt: assetsConstraints.updatedAt,
+        groupName: groups.name
       })
-      .from(distanceCoverageByDemands)
-      .innerJoin(
-        facilities,
-        eq(distanceCoverageByDemands.siteId, facilities.id)
-      );
+      .from(assetsConstraints)
+      .innerJoin(groups, eq(assetsConstraints.groupId, groups.id));
 
     return c.json({ data });
   })
@@ -56,16 +56,20 @@ const app = new Hono()
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid('param');
+
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
+
       const [data] = await db
         .select()
-        .from(distanceCoverageByDemands)
-        .where(eq(distanceCoverageByDemands.id, parseInt(id)));
+        .from(assetsConstraints)
+        .where(eq(assetsConstraints.id, parseInt(id)));
+
       if (!data) {
         return c.json({ error: 'Not found' }, 404);
       }
+
       return c.json({ data });
     }
   )
@@ -74,7 +78,7 @@ const app = new Hono()
     clerkMiddleware(),
     zValidator(
       'json',
-      insertDistanceCoverageByDemandSchema.omit({
+      insertAssetsConstraintSchema.omit({
         id: true
       })
     ),
@@ -87,7 +91,7 @@ const app = new Hono()
       }
 
       const [data] = await db
-        .insert(distanceCoverageByDemands)
+        .insert(assetsConstraints)
         .values({
           ...values
         })
@@ -102,7 +106,7 @@ const app = new Hono()
     zValidator(
       'json',
       z.array(
-        insertDistanceCoverageByDemandSchema.omit({
+        insertAssetsConstraintSchema.omit({
           id: true
         })
       )
@@ -116,32 +120,39 @@ const app = new Hono()
       }
 
       const data = await db
-        .insert(distanceCoverageByDemands)
+        .insert(assetsConstraints)
         .values(
           values.map((value) => ({
             ...value
           }))
         )
         .returning();
-
       return c.json({ data });
     }
   )
   .post(
     '/bulk-delete',
     clerkMiddleware(),
-    zValidator('json', z.object({ ids: z.array(z.number()) })),
+    zValidator(
+      'json',
+      z.object({
+        ids: z.array(z.number())
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const { ids } = c.req.valid('json');
+
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
+
       try {
         const data = await db
-          .delete(distanceCoverageByDemands)
-          .where(inArray(distanceCoverageByDemands.id, ids))
-          .returning({ id: distanceCoverageByDemands.id });
+          .delete(assetsConstraints)
+          .where(inArray(assetsConstraints.id, ids))
+          .returning({ id: assetsConstraints.id });
+
         return c.json({ data });
       } catch (error) {
         console.error('Bulk delete error:', error);
@@ -152,20 +163,29 @@ const app = new Hono()
   .delete(
     '/:id',
     clerkMiddleware(),
-    zValidator('param', z.object({ id: z.string() })),
+    zValidator(
+      'param',
+      z.object({
+        id: z.string()
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid('param');
+
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
+
       const [data] = await db
-        .delete(distanceCoverageByDemands)
-        .where(eq(distanceCoverageByDemands.id, parseInt(id)))
+        .delete(assetsConstraints)
+        .where(eq(assetsConstraints.id, parseInt(id)))
         .returning();
+
       if (!data) {
         return c.json({ error: 'Not found' }, 404);
       }
+
       return c.json({ data });
     }
   )
@@ -178,7 +198,7 @@ const app = new Hono()
         id: z.string()
       })
     ),
-    zValidator('json', patchDistanceSchema),
+    zValidator('json', patchAssetsConstraintSchema),
     async (c) => {
       try {
         const auth = getAuth(c);
@@ -190,15 +210,9 @@ const app = new Hono()
         }
 
         const [data] = await db
-          .update(distanceCoverageByDemands)
-          .set({
-            siteId: values.siteId,
-            siteName: values.siteName,
-            demandPercentage: values.demandPercentage?.toString(),
-            demandM3: values.demandM3?.toString(),
-            distanceToSiteKm: values.distanceToSiteKm?.toString()
-          })
-          .where(eq(distanceCoverageByDemands.id, parseInt(id)))
+          .update(assetsConstraints)
+          .set(values)
+          .where(eq(assetsConstraints.id, parseInt(id)))
           .returning();
 
         if (!data) {

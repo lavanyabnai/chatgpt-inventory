@@ -5,13 +5,14 @@ import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { distanceCoverageByDemands } from '@/db/schema';
-import { Actions } from "./actions"
+import { suppliers } from "@/db/schema"
 
-// Define the type for a coglocation based on the schema
-type distanceCoverageByDemands = typeof distanceCoverageByDemands.$inferSelect;
+import { Actions } from './actions';
 
-export const columns: ColumnDef<distanceCoverageByDemands>[] = [
+// Define the type for a supplier based on the schema
+type Supplier = typeof suppliers.$inferSelect
+
+export const columns: ColumnDef<Supplier>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -35,22 +36,7 @@ export const columns: ColumnDef<distanceCoverageByDemands>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'facilityName',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Site ID
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    }
-  },
-
-  {
-    accessorKey: 'siteName',
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
@@ -64,16 +50,65 @@ export const columns: ColumnDef<distanceCoverageByDemands>[] = [
     }
   },
   {
-    accessorKey: 'distanceToSiteKm',
-    header: 'Distance to Site (Km)'
+    accessorKey: 'type',
+    header: 'Type'
   },
   {
-    accessorKey: 'demandPercentage',
-    header: 'Demand Percentage'
+    accessorKey: 'locationId',
+    header: 'Location Id'
   },
   {
-    accessorKey: 'demandM3',
-    header: 'Demand M3'
+    accessorKey: 'products',
+    header: 'Products'
+  },
+  {
+    accessorKey: 'inclusionType',
+    header: 'Inclusion Type'
+  },
+  // {
+  //   accessorKey: 'additionalParameters',
+  //   header: 'Additional Parameters'
+  // },
+  {
+    accessorKey: 'icon',
+    header: 'Icon',
+    cell: ({ row }) => <span>{row.original.icon || 'Default'}</span>
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Created At
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt;
+      if (createdAt instanceof Date) {
+        return createdAt.toLocaleDateString();
+      } else if (typeof createdAt === 'string') {
+        return new Date(createdAt).toLocaleDateString();
+      } else {
+        return 'Invalid Date';
+      }
+    }
+  },
+  {
+    accessorKey: 'locationName',
+    header: 'Location Name'
+  },
+  {
+    accessorKey: 'additionalParams',
+    header: 'Additional Parameters',
+    cell: ({ row }) => {
+      const params = row.original.additionalParameters;
+      return params ? JSON.stringify(params) : 'N/A';
+    }
   },
   {
     accessorKey: 'updatedAt',

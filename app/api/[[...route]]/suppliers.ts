@@ -5,18 +5,16 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 import { db } from '@/db/drizzle';
-import {
-  distanceCoverageByDemands,
-  facilities,
-  insertDistanceCoverageByDemandSchema
-} from '@/db/schema';
+import { suppliers, locations, insertsuppliersSchema } from '@/db/schema';
 
-const patchDistanceSchema = z.object({
-  siteId: z.number(),
-  siteName: z.string().optional(),
-  demandPercentage: z.number().optional(),
-  demandM3: z.number().optional(),
-  distanceToSiteKm: z.number().optional()
+const patchSupplierSchema = z.object({
+  name: z.string().optional(),
+  type: z.string().optional(),
+  locationId: z.number().optional(),
+  products: z.record(z.unknown()).optional(),
+  inclusionType: z.enum(['Include', 'Exclude', 'Consider']).optional(),
+  additionalParameters: z.record(z.unknown()).optional(),
+  icon: z.string().optional(),
 });
 
 const app = new Hono()
@@ -27,20 +25,20 @@ const app = new Hono()
     }
     const data = await db
       .select({
-        id: distanceCoverageByDemands.id,
-        siteId: distanceCoverageByDemands.siteId,
-        siteName: distanceCoverageByDemands.siteName,
-        demandPercentage: distanceCoverageByDemands.demandPercentage,
-        demandM3: distanceCoverageByDemands.demandM3,
-        distanceToSiteKm: distanceCoverageByDemands.distanceToSiteKm,
-        updatedAt: distanceCoverageByDemands.updatedAt,
-        facilityName: facilities.name
+        id: suppliers.id,
+        name: suppliers.name,
+        type: suppliers.type,
+        locationId: locations.id,
+        products: suppliers.products,
+        inclusionType: suppliers.inclusionType,
+        additionalParameters: suppliers.additionalParameters,
+        updatedAt: suppliers.updatedAt,
+        createdAt: suppliers.createdAt,
+        icon: suppliers.icon,
+        locationName: locations.name
       })
-      .from(distanceCoverageByDemands)
-      .innerJoin(
-        facilities,
-        eq(distanceCoverageByDemands.siteId, facilities.id)
-      );
+      .from(suppliers)
+      .innerJoin(locations, eq(suppliers.locationId, locations.id));
 
     return c.json({ data });
   })
@@ -61,8 +59,8 @@ const app = new Hono()
       }
       const [data] = await db
         .select()
-        .from(distanceCoverageByDemands)
-        .where(eq(distanceCoverageByDemands.id, parseInt(id)));
+        .from(suppliers)
+        .where(eq(suppliers.id, parseInt(id)));
       if (!data) {
         return c.json({ error: 'Not found' }, 404);
       }
@@ -72,27 +70,14 @@ const app = new Hono()
   .post(
     '/',
     clerkMiddleware(),
-    zValidator(
-      'json',
-      insertDistanceCoverageByDemandSchema.omit({
-        id: true
-      })
-    ),
+    zValidator('json', insertsuppliersSchema),
     async (c) => {
       const auth = getAuth(c);
       const values = c.req.valid('json');
-
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
-
-      const [data] = await db
-        .insert(distanceCoverageByDemands)
-        .values({
-          ...values
-        })
-        .returning();
-
+      const [data] = await db.insert(suppliers).values(values).returning();
       return c.json({ data });
     }
   )
@@ -102,29 +87,67 @@ const app = new Hono()
     zValidator(
       'json',
       z.array(
-        insertDistanceCoverageByDemandSchema.omit({
-          id: true
-        })
+        insertsuppliersSchema
+          .omit({
+            id: true,
+            locationId: true,
+          })
+          .extend({
+            location_name: z.string()
+          })
       )
     ),
     async (c) => {
-      const auth = getAuth(c);
-      const values = c.req.valid('json');
+      try {
+        const auth = getAuth(c);
+        const values = c.req.valid('json');
 
-      if (!auth?.userId) {
-        return c.json({ error: 'Unauthorized' }, 401);
+        console.log(`bulk create values`, values);
+
+        if (!auth?.userId) {
+          return c.json({ error: 'Unauthorized' }, 401);
+        }
+
+        // Get all unique location names
+        const locationNames = Array.from(
+          new Set(values.map((v) => v.location_name))
+        );
+
+        const locationMap = new Map();
+        const existingLocations = await db
+          .select({ id: locations.id, name: locations.name })
+          .from(locations)
+          .where(inArray(locations.name, locationNames));
+
+        existingLocations.forEach((loc) => locationMap.set(loc.name, loc.id));
+
+        const supplierData = values.map((value) => {
+          const locationId = locationMap.get(value.location_name);
+          if (!locationId) {
+            throw new Error(`Location not found: ${value.location_name}`);
+          }
+          const { location_name, ...supplierFields } = value;
+          return {
+            ...supplierFields,
+            locationId,
+            userId: auth.userId
+          };
+        });
+
+        // Insert new suppliers
+        const data = await db.insert(suppliers).values(supplierData).returning();
+        return c.json({ data });
+      } catch (error) {
+        console.error('Bulk create error:', error);
+        if (error instanceof z.ZodError) {
+          console.error('Validation error:', error.errors);
+          return c.json(
+            { error: 'Validation error', details: error.errors },
+            400
+          );
+        }
+        return c.json({ error: 'Internal Server Error' }, 500);
       }
-
-      const data = await db
-        .insert(distanceCoverageByDemands)
-        .values(
-          values.map((value) => ({
-            ...value
-          }))
-        )
-        .returning();
-
-      return c.json({ data });
     }
   )
   .post(
@@ -139,9 +162,9 @@ const app = new Hono()
       }
       try {
         const data = await db
-          .delete(distanceCoverageByDemands)
-          .where(inArray(distanceCoverageByDemands.id, ids))
-          .returning({ id: distanceCoverageByDemands.id });
+          .delete(suppliers)
+          .where(inArray(suppliers.id, ids))
+          .returning({ id: suppliers.id });
         return c.json({ data });
       } catch (error) {
         console.error('Bulk delete error:', error);
@@ -160,8 +183,8 @@ const app = new Hono()
         return c.json({ error: 'Unauthorized' }, 401);
       }
       const [data] = await db
-        .delete(distanceCoverageByDemands)
-        .where(eq(distanceCoverageByDemands.id, parseInt(id)))
+        .delete(suppliers)
+        .where(eq(suppliers.id, parseInt(id)))
         .returning();
       if (!data) {
         return c.json({ error: 'Not found' }, 404);
@@ -178,7 +201,7 @@ const app = new Hono()
         id: z.string()
       })
     ),
-    zValidator('json', patchDistanceSchema),
+    zValidator('json', patchSupplierSchema),
     async (c) => {
       try {
         const auth = getAuth(c);
@@ -190,15 +213,9 @@ const app = new Hono()
         }
 
         const [data] = await db
-          .update(distanceCoverageByDemands)
-          .set({
-            siteId: values.siteId,
-            siteName: values.siteName,
-            demandPercentage: values.demandPercentage?.toString(),
-            demandM3: values.demandM3?.toString(),
-            distanceToSiteKm: values.distanceToSiteKm?.toString()
-          })
-          .where(eq(distanceCoverageByDemands.id, parseInt(id)))
+          .update(suppliers)
+          .set(values)
+          .where(eq(suppliers.id, parseInt(id)))
           .returning();
 
         if (!data) {

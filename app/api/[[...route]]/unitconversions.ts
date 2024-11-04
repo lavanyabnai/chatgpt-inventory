@@ -6,41 +6,41 @@ import { z } from 'zod';
 
 import { db } from '@/db/drizzle';
 import {
-  distanceCoverageByDemands,
-  facilities,
-  insertDistanceCoverageByDemandSchema
+  unitConversions,
+  products,
+  insertunitConversionSchema
 } from '@/db/schema';
 
-const patchDistanceSchema = z.object({
-  siteId: z.number(),
-  siteName: z.string().optional(),
-  demandPercentage: z.number().optional(),
-  demandM3: z.number().optional(),
-  distanceToSiteKm: z.number().optional()
+const patchunitConversionSchema = z.object({
+  productId: z.number().optional(),
+  amountFrom: z.number().optional(),
+  unitFrom: z.string().optional(),
+  amountTo: z.number().optional(),
+  unitTo: z.string(),
 });
 
 const app = new Hono()
   .get('/', clerkMiddleware(), async (c) => {
     const auth = getAuth(c);
+
     if (!auth?.userId) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
+
     const data = await db
       .select({
-        id: distanceCoverageByDemands.id,
-        siteId: distanceCoverageByDemands.siteId,
-        siteName: distanceCoverageByDemands.siteName,
-        demandPercentage: distanceCoverageByDemands.demandPercentage,
-        demandM3: distanceCoverageByDemands.demandM3,
-        distanceToSiteKm: distanceCoverageByDemands.distanceToSiteKm,
-        updatedAt: distanceCoverageByDemands.updatedAt,
-        facilityName: facilities.name
+        id: unitConversions.id,
+        productId: unitConversions.productId,
+        amountFrom: unitConversions.amountFrom,
+        unitFrom: unitConversions.unitFrom,
+        amountTo: unitConversions.amountTo,
+        unitTo: unitConversions.unitTo,
+        createdAt: unitConversions.createdAt,
+        updatedAt: unitConversions.updatedAt,
+        productName: products.name
       })
-      .from(distanceCoverageByDemands)
-      .innerJoin(
-        facilities,
-        eq(distanceCoverageByDemands.siteId, facilities.id)
-      );
+      .from(unitConversions)
+      .innerJoin(products, eq(unitConversions.productId, products.id));
 
     return c.json({ data });
   })
@@ -56,16 +56,20 @@ const app = new Hono()
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid('param');
+
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
+
       const [data] = await db
         .select()
-        .from(distanceCoverageByDemands)
-        .where(eq(distanceCoverageByDemands.id, parseInt(id)));
+        .from(unitConversions)
+        .where(eq(unitConversions.id, parseInt(id)));
+
       if (!data) {
         return c.json({ error: 'Not found' }, 404);
       }
+
       return c.json({ data });
     }
   )
@@ -74,26 +78,35 @@ const app = new Hono()
     clerkMiddleware(),
     zValidator(
       'json',
-      insertDistanceCoverageByDemandSchema.omit({
+      insertunitConversionSchema.omit({
         id: true
       })
     ),
     async (c) => {
       const auth = getAuth(c);
       const values = c.req.valid('json');
-
+  
       if (!auth?.userId) {
+        console.error('❌ Unauthorized');
         return c.json({ error: 'Unauthorized' }, 401);
       }
-
-      const [data] = await db
-        .insert(distanceCoverageByDemands)
-        .values({
-          ...values
-        })
-        .returning();
-
-      return c.json({ data });
+  
+      try {
+        console.log('✅ Values received:', values); // Log received values for debugging
+  
+        const [data] = await db
+          .insert(unitConversions)
+          .values({
+            ...values
+          })
+          .returning();
+  
+        console.log('✅ Data inserted:', data); // Log the data returned from insertion
+        return c.json({ data });
+      } catch (error) {
+        console.error('❌ Insertion Error:', error);
+        return c.json({ error: 'Internal Server Error' }, 500);
+      }
     }
   )
   .post(
@@ -102,7 +115,7 @@ const app = new Hono()
     zValidator(
       'json',
       z.array(
-        insertDistanceCoverageByDemandSchema.omit({
+        insertunitConversionSchema.omit({
           id: true
         })
       )
@@ -116,32 +129,39 @@ const app = new Hono()
       }
 
       const data = await db
-        .insert(distanceCoverageByDemands)
+        .insert(unitConversions)
         .values(
           values.map((value) => ({
             ...value
           }))
         )
         .returning();
-
       return c.json({ data });
     }
   )
   .post(
     '/bulk-delete',
     clerkMiddleware(),
-    zValidator('json', z.object({ ids: z.array(z.number()) })),
+    zValidator(
+      'json',
+      z.object({
+        ids: z.array(z.number())
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const { ids } = c.req.valid('json');
+
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
+
       try {
         const data = await db
-          .delete(distanceCoverageByDemands)
-          .where(inArray(distanceCoverageByDemands.id, ids))
-          .returning({ id: distanceCoverageByDemands.id });
+          .delete(unitConversions)
+          .where(inArray(unitConversions.id, ids))
+          .returning({ id: unitConversions.id });
+
         return c.json({ data });
       } catch (error) {
         console.error('Bulk delete error:', error);
@@ -152,20 +172,29 @@ const app = new Hono()
   .delete(
     '/:id',
     clerkMiddleware(),
-    zValidator('param', z.object({ id: z.string() })),
+    zValidator(
+      'param',
+      z.object({
+        id: z.string()
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid('param');
+
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, 401);
       }
+
       const [data] = await db
-        .delete(distanceCoverageByDemands)
-        .where(eq(distanceCoverageByDemands.id, parseInt(id)))
+        .delete(unitConversions)
+        .where(eq(unitConversions.id, parseInt(id)))
         .returning();
+
       if (!data) {
         return c.json({ error: 'Not found' }, 404);
       }
+
       return c.json({ data });
     }
   )
@@ -178,7 +207,7 @@ const app = new Hono()
         id: z.string()
       })
     ),
-    zValidator('json', patchDistanceSchema),
+    zValidator('json', patchunitConversionSchema),
     async (c) => {
       try {
         const auth = getAuth(c);
@@ -190,15 +219,9 @@ const app = new Hono()
         }
 
         const [data] = await db
-          .update(distanceCoverageByDemands)
-          .set({
-            siteId: values.siteId,
-            siteName: values.siteName,
-            demandPercentage: values.demandPercentage?.toString(),
-            demandM3: values.demandM3?.toString(),
-            distanceToSiteKm: values.distanceToSiteKm?.toString()
-          })
-          .where(eq(distanceCoverageByDemands.id, parseInt(id)))
+          .update(unitConversions)
+          .set(values)
+          .where(eq(unitConversions.id, parseInt(id)))
           .returning();
 
         if (!data) {

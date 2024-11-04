@@ -8,15 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { distanceCoverageByDemands as distanceByDemandSchema } from '@/db/schema';
-import { useBulkCreateDistancebydemands } from '@/features/distancebydemands/api/use-bulk-create-distancebydemands';
-import { useBulkDeleteDistancebydemands } from '@/features/distancebydemands/api/use-bulk-delete-distancebydemands';
-import { useGetDistancebydemands } from '@/features/distancebydemands/api/use-get-distancebydemands';
-import { useNewDistancebydemand } from '@/features/distancebydemands/hooks/use-new-distancebydemand';
+import { customConstraints as customconstraintSchema } from '@/db/schema';
+import { useBulkCreatecustomconstraints } from '@/features/customconstraints/api/use-bulk-create-customconstraints';
+import { useBulkDeletecustomconstraints } from '@/features/customconstraints/api/use-bulk-delete-customconstraints';
+import { useGetcustomconstraints } from '@/features/customconstraints/api/use-get-customconstraints';
+import { useNewcustomconstraint } from '@/features/customconstraints/hooks/use-new-customconstraint';
 
 import { columns } from './columns';
 import { ImportCard } from './import-card';
 import { UploadButton } from './upload-button';
+
 
 enum VARIANTS {
   LIST = 'LIST',
@@ -29,7 +30,8 @@ const INITIAL_IMPORT_RESULTS = {
   meta: {}
 };
 
-export default function FacilitiesPage() {
+export default function CustomconstraintsPage() {
+  // const [AccountDialog, confirm] = useSelectAccount();
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
@@ -43,16 +45,16 @@ export default function FacilitiesPage() {
     setVariant(VARIANTS.LIST);
   };
 
-  const newDistancebydemand = useNewDistancebydemand();
-  const createDistancebydemands = useBulkCreateDistancebydemands();
-  const deleteDistancebydemands = useBulkDeleteDistancebydemands();
-  const distancebydemandsQuery = useGetDistancebydemands();
-  const distancebydemands = distancebydemandsQuery.data || [];
+  const newcustomconstraint = useNewcustomconstraint();
+  const createcustomconstraints = useBulkCreatecustomconstraints();
+  const deletecustomconstraints = useBulkDeletecustomconstraints();
+  const customconstraintsQuery = useGetcustomconstraints();
+  const customconstraints = customconstraintsQuery.data || [];
 
-  const isDisabled = distancebydemandsQuery.isLoading || deleteDistancebydemands.isPending;
+  const isDisabled = customconstraintsQuery.isLoading || deletecustomconstraints.isPending;
 
   const onSubmitImport = async (
-    values: (typeof distanceByDemandSchema.$inferInsert)[]
+    values: (typeof customconstraintSchema.$inferInsert)[]
   ) => {
     // const accountId = await confirm();
 
@@ -65,14 +67,14 @@ export default function FacilitiesPage() {
       // accountId: accountId as string
     }));
 
-    createDistancebydemands.mutate(data, {
+    createcustomconstraints.mutate(data, {
       onSuccess: () => {
         onCancelImport();
       }
     });
   };
 
-  if (distancebydemandsQuery.isLoading) {
+  if (customconstraintsQuery.isLoading) {
     return (
       <div className="max-w-screen-6xl mx-auto w-full pb-10 -mt-24">
         <Card className="border-none drop-shadow-sm">
@@ -104,11 +106,11 @@ export default function FacilitiesPage() {
 
   return (
     <div className="max-w-screen-6xl mx-auto w-full">
-      <div className="flex flex-col px-4 py-2 m-0.5 lg:flex-row lg:items-center lg:justify-between">
-        <CardTitle className="text-xl line-clamp-1">Distance by Demand List</CardTitle>
+      <div className="flex flex-col  px-4 py-2 m-0.5 lg:flex-row lg:items-center lg:justify-between">
+        <CardTitle className="text-xl line-clamp-1">Custom Constraint Table</CardTitle>
         <div className="flex flex-col lg:flex-row gap-2 items-center">
           <Button
-            onClick={newDistancebydemand.onOpen}
+            onClick={newcustomconstraint.onOpen}
             size="sm"
             className="w-full lg:w-auto"
           >
@@ -121,13 +123,12 @@ export default function FacilitiesPage() {
       <Separator />
       <div className="px-4">
         <DataTable
-          placeHolder="site name"
-          filterKey="siteName"
+          filterKey="leftHandSide"
           columns={columns}
-          data={distancebydemands}
+          data={customconstraints}
           onDelete={(row) => {
             const ids = row.map((r) => r.original.id);
-            deleteDistancebydemands.mutate({ ids });
+            deletecustomconstraints.mutate({ ids });
           }}
           disabled={isDisabled}
         />

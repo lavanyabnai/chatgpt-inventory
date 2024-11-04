@@ -5,13 +5,13 @@ import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { distanceCoverageByDemands } from '@/db/schema';
-import { Actions } from "./actions"
+import { customConstraints } from "@/db/schema"
 
-// Define the type for a coglocation based on the schema
-type distanceCoverageByDemands = typeof distanceCoverageByDemands.$inferSelect;
+import { Actions } from './actions';
+// Define the type for a customconstraint based on the schema
+type customconstraint = typeof customConstraints.$inferSelect
 
-export const columns: ColumnDef<distanceCoverageByDemands>[] = [
+export const columns: ColumnDef<customconstraint>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -35,46 +35,46 @@ export const columns: ColumnDef<distanceCoverageByDemands>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'facilityName',
+    accessorKey: 'leftHandSide',
+    header: 'Left Hand Side'
+  },
+  {
+    accessorKey: 'comparisonType',
+    header: 'comparison Type'
+  },
+  {
+    accessorKey: 'rightHandSide',
+    header: 'right Hand Side'
+  },
+  {
+    accessorKey: 'constraintType',
+    header: 'constraint Type'
+  },
+  {
+    accessorKey: 'createdAt',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Site ID
+          Created At
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt;
+      if (createdAt instanceof Date) {
+        return createdAt.toLocaleDateString();
+      } else if (typeof createdAt === 'string') {
+        return new Date(createdAt).toLocaleDateString();
+      } else {
+        return 'Invalid Date';
+      }
     }
   },
 
-  {
-    accessorKey: 'siteName',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Name
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    }
-  },
-  {
-    accessorKey: 'distanceToSiteKm',
-    header: 'Distance to Site (Km)'
-  },
-  {
-    accessorKey: 'demandPercentage',
-    header: 'Demand Percentage'
-  },
-  {
-    accessorKey: 'demandM3',
-    header: 'Demand M3'
-  },
   {
     accessorKey: 'updatedAt',
     header: ({ column }) => {
@@ -99,6 +99,7 @@ export const columns: ColumnDef<distanceCoverageByDemands>[] = [
       }
     }
   },
+
   {
     id: 'actions',
     cell: ({ row }) => <Actions id={row.original.id.toString()} />
