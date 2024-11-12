@@ -75,14 +75,14 @@ export default function Page({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-full">
-      <Header title="Inventory Optimizer" navigation={navigation} />
+     
       <div className="flex max-h-full">
         <SidebarShadcn
           sidebarMenu={senariomenus}
           bottomNavItems={bottomNavItems}
         />
 
-        <main className=" pl-[57px] min-w-full "> {children}</main>
+        <main className="pl-[57px] min-w-full"> {children}</main>
       </div>
     </div>
   );

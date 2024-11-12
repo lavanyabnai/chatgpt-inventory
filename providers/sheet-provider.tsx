@@ -26,6 +26,9 @@ import { EditUnitSheet } from "@/features/units/components/edit-unit-sheet";
 import { NewUnitSheet } from "@/features/units/components/new-unit-sheet";
 import { EditvehicleTypeSheet } from '@/features/vehicleTypes/components/edit-vehicleType-sheet';
 import { NewvehicleTypeSheet } from '@/features/vehicleTypes/components/new-vehicleType-sheet';
+import { NewBomSheet } from '@/features/boms/components/new-bom-sheet';
+import { EditBomSheet } from '@/features/boms/components/edit-bom-sheet';
+
 
 export const SheetProvider = () => {
   const isMounted = useMountedState();
@@ -70,6 +73,9 @@ export const SheetProvider = () => {
 
       <NewvehicleTypeSheet />
       <EditvehicleTypeSheet />
+
+      <NewBomSheet />
+      <EditBomSheet />
     </>
   );
 };

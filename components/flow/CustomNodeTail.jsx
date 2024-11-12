@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Handle, Position } from '@xyflow/react';
+import { Handle } from '@xyflow/react';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -34,8 +34,8 @@ function CustomNode({ data }) {
           </div> */}
         </div>
       </div>
-      <Handle type="source" position={Position.Right} className="w-1 bg-teal-500" />
-      <Handle type="target" position={Position.Left} className="w-1 bg-teal-500" />
+      <Handle type="source" position="right" className="w-1 bg-teal-500" />
+      <Handle type="target" position="left" className="w-1 bg-teal-500" />
     </div>
   )
 }

@@ -10,9 +10,7 @@ import {
   ReactFlow,
   useNodesState,
   useEdgesState,
-  addEdge,
-  MiniMap,
-  Controls
+  addEdge
 } from '@xyflow/react';
 import React, { useCallback } from 'react';
 
@@ -26,13 +24,16 @@ import {
 
 
 import '@xyflow/react/dist/base.css';
-
+import '@/tailwind.config';
 import CustomNode from '@/components/flow/CustomNodeTail';
 
 export enum MarkerType {
   Arrow = 'arrow',
   ArrowClosed = 'arrowclosed'
 }
+const nodeTypes = {
+  custom: CustomNode
+};
 
 export function Icontooltip() {
   return (
@@ -101,9 +102,6 @@ export function Icontooltip() {
     </div>
   );
 }
-const nodeTypes = {
-  custom: CustomNode
-};
 
 const initNodes = [
   {
@@ -390,30 +388,21 @@ const initEdges = [
     animated: true
   }
 ];
-
 export default function Flowchart() {
- const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
- const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     []
   );
+
   return (
     <>
       <div className="m-4">
-        <div className="w-100 my-2 flex  justify-between p-4 rounded-lg border bg-white">
-          <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-sky-700 to-blue-700 font-display">
-            Availability Analytics
-          </h2>
-
-          <div className="flex items-center justify-end"></div>
-        </div>
-
         <div className="flex items-center justify-center  rounded-t-lg bg-gradient-to-t from-indigo-400 via-cyan-400 to-sky-500 shadow-lg p-0.5">
           <div className=" flex items-center w-full justify-between bg-sky-50  border rounded-t-lg text-2xl text-blue-900 font-bold">
-            <div className="p-2">Root Cause Analysis</div>
-            <Icontooltip />
+            <div className="p-2">Network View</div>
           </div>
         </div>
 
@@ -422,12 +411,11 @@ export default function Flowchart() {
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
-      
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             fitView
-            className="bg-white w-full h-[630px] flex justify-start items-center"
+            className="bg-zinc-50 flex justify-start items-center overflow-y-auto"
           ></ReactFlow>
         </div>
       </div>

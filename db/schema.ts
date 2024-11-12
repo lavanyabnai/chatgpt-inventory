@@ -785,6 +785,8 @@ export const unitConversions = pgTable(
   })
 );
 
+export const insertunitConversionSchema = createInsertSchema(unitConversions);
+
 export const units = pgTable(
   'units',
   {
@@ -822,7 +824,7 @@ export const assetsConstraints = pgTable(
     ).on(table.groupId, table.timePeriod) // Optional index for faster querying by group_id and time_period
   })
 );
-
+export const insertAssetsConstraintSchema = createInsertSchema(assetsConstraints);
 export const cashAccounts = pgTable(
   'cash_accounts',
   {
@@ -883,7 +885,7 @@ export const customConstraints = pgTable(
     )
   })
 );
-
+export const insertcustomConstraintSchema = createInsertSchema(customConstraints);
 export const facilityExpenses = pgTable(
   'facility_expenses',
   {
@@ -923,7 +925,7 @@ export const linearRanges = pgTable(
     nameIdx: index('idx_linear_ranges_name').on(table.name)
   })
 );
-
+export const insertlinearrangeSchema = createInsertSchema(linearRanges);
 export const indicatorConstraints = pgTable(
   'indicator_constraints',
   {
@@ -943,7 +945,7 @@ export const indicatorConstraints = pgTable(
     thenConditionIdIdx: index('idx_then_condition_id').on(table.thenConditionId)
   })
 );
-
+export const insertIndicatorConstraintSchema = createInsertSchema(indicatorConstraints);
 export const objectiveMembers = pgTable(
   'objective_members',
   {
@@ -968,7 +970,7 @@ export const objectiveMembers = pgTable(
     )
   })
 );
-
+export const insertObjectiveMemberSchema = createInsertSchema(objectiveMembers);
 export const paths = pgTable(
   'paths',
   {
@@ -1118,6 +1120,7 @@ export const processingCosts = pgTable(
     )
   })
 );
+
 export const bom = pgTable(
   'bom',
   {
@@ -1135,6 +1138,8 @@ export const bom = pgTable(
     endProductIdx: index('idx_bom_end_product').on(table.endProductId)
   })
 );
+export const insertBomSchema = createInsertSchema(bom);
+
 
 export const bomComponents = pgTable(
   'bom_components',

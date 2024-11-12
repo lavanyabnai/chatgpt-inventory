@@ -6,6 +6,7 @@ import { handle } from 'hono/vercel';
 import categories from './categories';
 import cogLocations from './coglocations';
 import customers from './customers';
+import assetsConstraints from './assetsconstraints';
 import demandByDistances from './demandbydistances';
 import demandFulfillments from './demandfulfillments';
 import demands from './demands';
@@ -20,7 +21,13 @@ import summary from './summary';
 import transactions from './transactions';
 import units from './units';
 import vehicleTypes from './vehicleTypes';
-
+import customConstraints from './customconstraints';
+import linearRanges from './linearranges';
+import indicatorConstraints from './indicatorconstraints';
+import objectiveMembers from './objectivemembers';
+import unitconversions from './unitconversions';
+// import processingcosts from './processingcost';
+import boms from './boms';
 export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
@@ -46,7 +53,14 @@ const routes = app
   .route('/distancebydemands', distanceByDemands)
   .route('/productflows', productFlows)
   .route('/demandfulfillments', demandFulfillments)
-
+  .route('/assetsconstraints', assetsConstraints)
+  .route('/customconstraints', customConstraints)
+  .route('/indicatorconstraints', indicatorConstraints)
+  .route('/objectivemembers', objectiveMembers)
+  .route('/linearranges', linearRanges)
+  .route('/unitconversions', unitconversions)
+  // .route('/processingcosts', processingcosts);
+  .route('/boms', boms);
 export const GET = handle(app);
 export const POST = handle(app);
 export const PATCH = handle(app);

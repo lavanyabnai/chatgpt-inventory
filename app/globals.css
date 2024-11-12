@@ -120,3 +120,16 @@
     @apply bg-foreground/20 animate-pulse;
   }
 }
+
+@layer base {
+   [inert] ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
