@@ -25,8 +25,9 @@ import customConstraints from './customconstraints';
 import linearRanges from './linearranges';
 import indicatorConstraints from './indicatorconstraints';
 import objectiveMembers from './objectivemembers';
-import unitconversions from './unitconversions';
-// import processingcosts from './processingcost';
+import unitconversions from './unitconversions'
+import processingcosts from './processingcost'
+
 import boms from './boms';
 export const runtime = 'nodejs';
 
@@ -55,12 +56,13 @@ const routes = app
   .route('/demandfulfillments', demandFulfillments)
   .route('/assetsconstraints', assetsConstraints)
   .route('/customconstraints', customConstraints)
+  .route('/linearranges', linearRanges)
   .route('/indicatorconstraints', indicatorConstraints)
   .route('/objectivemembers', objectiveMembers)
-  .route('/linearranges', linearRanges)
   .route('/unitconversions', unitconversions)
-  // .route('/processingcosts', processingcosts);
+  .route('/processingcosts', processingcosts)
   .route('/boms', boms);
+
 export const GET = handle(app);
 export const POST = handle(app);
 export const PATCH = handle(app);

@@ -1,3 +1,9 @@
+'use client'
+
+import * as React from 'react'
+
+import { cn } from '@/lib/utils'
+
 export const BotIcon = () => {
   return (
     <svg
@@ -17,7 +23,7 @@ export const BotIcon = () => {
   );
 };
 
-export const UserIcon = () => {
+export const UserIcon = ({ className, ...props }: React.ComponentProps<'svg'>) => {
   return (
     <svg
       data-testid="geist-icon"
@@ -25,7 +31,8 @@ export const UserIcon = () => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ color: "currentcolor" }}
+      className={cn('', className)}
+      {...props}
     >
       <path
         fillRule="evenodd"

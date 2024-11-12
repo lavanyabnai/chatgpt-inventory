@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
 
+import { LuPlus } from "react-icons/lu";
 import { Chat } from "@/db/schema";
 import { fetcher, getTitleFromChat } from "@/lib/utils";
 
@@ -121,7 +122,7 @@ export const History = ({ user }: { user: User | undefined }) => {
 
           <div className="text-sm flex flex-row items-center justify-between">
             <div className="flex flex-row gap-2">
-              <div className="dark:text-zinc-300">History</div>
+              <div className="dark:text-zinc-300">Chat History</div>
 
               <div className="dark:text-zinc-400 text-zinc-500">
                 {history === undefined ? "loading" : history.length} chats
@@ -137,7 +138,7 @@ export const History = ({ user }: { user: User | undefined }) => {
               >
                 <Link href="/chat">
                   <div>Start a new chat</div>
-                  <PencilEditIcon size={14} />
+                  <LuPlus size={14} />
                 </Link>
               </Button>
             )}

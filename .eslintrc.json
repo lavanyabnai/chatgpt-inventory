@@ -9,10 +9,15 @@
   "plugins": ["tailwindcss"],
   "rules": {
     "tailwindcss/no-custom-classname": "off",
-    "tailwindcss/classnames-order": "off"
+    "tailwindcss/classnames-order": "off",
+    "import/order": "off"
   },
   "settings": {
     "tailwindcss": {
+      "node": {
+        "paths": ["app"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      },
       "callees": ["cn", "cva"],
       "config": "tailwind.config.js"
     }

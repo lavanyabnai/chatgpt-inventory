@@ -631,6 +631,7 @@ export const suppliers = pgTable(
     inclusionTypeCheck: sql`CHECK (${table.inclusionType} IN ('Include', 'Exclude'))`
   })
 );
+export const insertsuppliersSchema = createInsertSchema(suppliers);
 
 export const supplierProducts = pgTable(
   'supplier_products',
@@ -784,8 +785,6 @@ export const unitConversions = pgTable(
     unitToIdx: index('idx_unit_conversions_unit_to').on(table.unitTo)
   })
 );
-
-export const insertunitConversionSchema = createInsertSchema(unitConversions);
 
 export const units = pgTable(
   'units',
@@ -1120,6 +1119,9 @@ export const processingCosts = pgTable(
     )
   })
 );
+
+export const insertProcessingCostsSchema = createInsertSchema(processingCosts);
+
 
 export const bom = pgTable(
   'bom',

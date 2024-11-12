@@ -21,14 +21,14 @@ import { Textarea } from "../ui/textarea";
 
 const suggestedActions = [
   {
-    title: "What is the weather",
-    label: "in San Francisco?",
-    action: "What is the weather in San Francisco?",
+    title: "Which product families and SKUs",
+    label: "created the most backorders and OTIF misses?",
+    action: "Which product families and SKUs",
   },
   {
-    title: "Answer like I'm 5,",
-    label: "why is the sky blue?",
-    action: "Answer like I'm 5, why is the sky blue?",
+    title: "what is the overall,",
+    label: "service and inventory performance for $ construction?",
+    action: "what is the overall?",
   },
 ];
 
@@ -156,7 +156,7 @@ export function MultimodalInput({
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
-          <div className="grid sm:grid-cols-2 gap-2 w-full md:px-0 mx-auto md:max-w-[500px]">
+          <div className="grid sm:grid-cols-2 gap-2 w-full md:px-0 mx-auto md:max-w-[900px]">
             {suggestedActions.map((suggestedAction, index) => (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -219,7 +219,7 @@ export function MultimodalInput({
         placeholder="Send a message..."
         value={input}
         onChange={handleInput}
-        className="min-h-[24px] overflow-hidden resize-none rounded-lg text-base bg-muted"
+        className="min-h-[44px] overflow-hidden resize-none rounded-lg text-base bg-muted"
         rows={3}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -246,7 +246,7 @@ export function MultimodalInput({
         </Button>
       ) : (
         <Button
-          className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5"
+          className="rounded-full p-1 h-fit absolute bottom-2 right-2 m-0.5 "
           onClick={(event) => {
             event.preventDefault();
             submitForm();
@@ -258,7 +258,7 @@ export function MultimodalInput({
       )}
 
       <Button
-        className="rounded-full p-1.5 h-fit absolute bottom-2 right-10 m-0.5 dark:border-zinc-700"
+        className="rounded-full p-1.5 h-fit absolute bottom-2 right-10 m-0.5 dark:border-grey-700"
         onClick={(event) => {
           event.preventDefault();
           fileInputRef.current?.click();
