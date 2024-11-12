@@ -26,6 +26,20 @@ import { EditUnitSheet } from "@/features/units/components/edit-unit-sheet";
 import { NewUnitSheet } from "@/features/units/components/new-unit-sheet";
 import { EditvehicleTypeSheet } from '@/features/vehicleTypes/components/edit-vehicleType-sheet';
 import { NewvehicleTypeSheet } from '@/features/vehicleTypes/components/new-vehicleType-sheet';
+import { NewAssetsconstraintSheet } from '@/features/assetsconstraints/components/new-assetsconstraint-sheet';
+import { EditAssetsconstraintSheet } from '@/features/assetsconstraints/components/edit-assetsconstraint-sheet';
+import { NewcustomconstraintSheet } from "@/features/customconstraints/components/new-customconstraint-sheet";
+import { EditcustomconstraintSheet } from "@/features/customconstraints/components/edit-customconstraint-sheet";
+import { NewLinearrangeSheet } from '@/features/linearranges/components/new-linearrange-sheet';
+import { EditLinearrangeSheet } from "@/features/linearranges/components/edit-linearrange-sheet";
+import { NewDistancebydemandSheet } from "@/features/distancebydemands/components/new-distancebydemand-sheet";
+import { EditDistancebydemandSheet } from "@/features/distancebydemands/components/edit-distancebydemand-sheet";
+import { NewIndicatorconstraintSheet } from "@/features/indicatorconstraints/components/new-indicatorconstraint-sheet";
+import { EditIndicatorconstraintSheet } from "@/features/indicatorconstraints/components/edit-indicatorconstraint-sheet";
+import { NewobjectivememberSheet } from '@/features/objectivemembers/components/new-objectivemember-sheet';
+import { EditobjectivememberSheet } from "@/features/objectivemembers/components/edit-objectivemember-sheet";
+import { NewProcessingcostSheet } from "@/features/processingcost/components/new-processingcost-sheet";
+import { EditProcessingcostSheet } from "@/features/processingcost/components/edit-processingcost-sheet";
 
 export const SheetProvider = () => {
   const isMounted = useMountedState();
@@ -46,6 +60,10 @@ export const SheetProvider = () => {
 
       <NewCustomerSheet />
       <EditCustomerSheet />
+
+
+      <NewDistancebydemandSheet />
+      <EditDistancebydemandSheet />
 
       <NewLocationSheet />
       <EditLocationSheet />
@@ -69,7 +87,26 @@ export const SheetProvider = () => {
       <EditPeriodSheet />
 
       <NewvehicleTypeSheet />
-      <EditvehicleTypeSheet />
+        <EditvehicleTypeSheet />
+
+      <NewAssetsconstraintSheet />
+      <EditAssetsconstraintSheet />
+
+      <NewcustomconstraintSheet/>
+      <EditcustomconstraintSheet />
+
+      <NewLinearrangeSheet />
+      <EditLinearrangeSheet />
+
+      <NewIndicatorconstraintSheet />
+      <EditIndicatorconstraintSheet />
+
+      <NewobjectivememberSheet />
+      <EditobjectivememberSheet />
+
+      <NewProcessingcostSheet />
+      <EditProcessingcostSheet />
+
     </>
   );
 };

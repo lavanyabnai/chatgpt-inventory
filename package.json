@@ -114,6 +114,7 @@
     "jotai": "^2.10.0",
     "js-yaml": "^4.1.0",
     "lucide-react": "^0.446.0",
+    "nanoid": "^5.0.8",
     "next": "15.0.0-canary.152",
     "next-auth": "5.0.0-beta.22",
     "next-themes": "^0.3.0",
@@ -132,6 +133,7 @@
     "react-resizable-panels": "^2.1.4",
     "react-select": "^5.8.1",
     "react-use": "^17.5.1",
+    "recharts": "^2.13.3",
     "remark-gfm": "^4.0.0",
     "server-only": "^0.0.1",
     "sonner": "^1.5.0",
@@ -151,6 +153,7 @@
   "devDependencies": {
     "@types/d3-scale": "^4.0.8",
     "@types/js-yaml": "^4.0.9",
+    "@types/nanoid": "^3.0.0",
     "@types/node": "^20",
     "@types/pdf-parse": "^1.1.4",
     "@types/react": "^18",

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 
 import { Mail } from "@/app/(inventory)/mail/components/mail"
-import { accounts, allTables, cogTables } from '@/app/(inventory)/mail/data';
+import {allTables, cogTables } from '@/app/(inventory)/mail/data';
 
 export default function MailPage() {
   const layout = cookies().get("react-resizable-panels:layout:mail")
@@ -14,12 +14,10 @@ export default function MailPage() {
     <>
       <div className=" bg-white">
         <Mail
-          accounts={accounts}
           allTables={allTables}
           cogTables={cogTables}
           defaultLayout={defaultLayout}
-          defaultCollapsed={defaultCollapsed}
-          // navCollapsedSize={2}
+          defaultCollapsed={defaultCollapsed} accounts={[]}          // navCollapsedSize={2}
         />
       </div>
     </>

@@ -1,14 +1,21 @@
+import AssetsconstraintsPage from '@/app/(inventory)/assetsconstraints/page';
 import CogLocationsPage from '@/app/(inventory)/coglocations/page';
+import CustomconstraintsPage from '@/app/(inventory)/customconstraints/page';
 import CustomersPage from '@/app/(inventory)/customers/page';
 import DemandByDistancePage from '@/app/(inventory)/demandfulfillment/page';
 import DemandsPage from '@/app/(inventory)/demands/page';
 import DistanceByDemandPage from '@/app/(inventory)/distancebydemand/page';
 import FacilitiesPage from '@/app/(inventory)/facilities/page';
 import GroupsPage from '@/app/(inventory)/groups/page';
+import IndicatorconstraintsPage from '@/app/(inventory)/indicatorconstraints/page';
+import LinearrangesPage from '@/app/(inventory)/linearranges/page';
 import LocationsPage from '@/app/(inventory)/locations/page';
+import ObjectivemembersPage from '@/app/(inventory)/objectivemembers/page';
 import PeriodsPage from '@/app/(inventory)/periods/page';
 import ProductFlowsPage from '@/app/(inventory)/productflows/page';
 import ProductsPage from '@/app/(inventory)/products/page';
+import SuppliersPage from'@/app/(inventory)/suppliers/page';
+import UnitConversionsPage from '@/app/(inventory)/unitconversions/page';
 import UnitsPage from '@/app/(inventory)/units/page';
 import VehicleTypesPage from '@/app/(inventory)/vehicleTypes/page';
 
@@ -158,6 +165,83 @@ export const allTables = [
     labels: ['NET']
   },
   {
+    id: '010000',
+    name: 'Assets Constraints',
+    email: 'williamsmith@example.com',
+    subject: 'Meeting Tomorrow',
+    text: 'This table is used within the Network Optimization experiment only. It allows you to define the range limiting the desired number of sites in your supply chain. The experiment will use this data to find the optimal number of sites (or supersites) and their locations.',
+    dataTable: <AssetsconstraintsPage />,
+    date: '2023-10-22T09:00:00',
+    read: true,
+    labels: ['NET']
+  },
+  {
+    id: '0200000',
+    name: 'Custom Constraints',
+    email: 'bobjohnson@example.com',
+    subject: 'Weekend Plans',
+    text: 'The Location Groups table contains one or more user-defined locations from the Locations table. Location groups are used to simplify the definition of custom Paths: instead of creating one entry for each individual location, you create a location group and define a single entry for it.\n\n NETte the difference between location groups and groups. Location groups contain physical points on the map and have flat structure (i.e., a location group canNETt contain other location groups). Groups aggregate logical entities of your supply chain (customers, sites, suppliers and other groups) and can have a tree-like structure (i.e., a group can contain other groups).',
+    dataTable: <CustomconstraintsPage />,
+    date: '2023-04-10T11:45:00',
+    read: true,
+    labels: ['NET', 'SIM']
+  },
+  {
+    id: '0300000',
+    name: 'Indicator Constraints',
+    email: 'williamsmith@example.com',
+    subject: 'Meeting Tomorrow',
+    text: 'This table is used within the Network Optimization and Simulation experiments only.A BOM is a list of components and their quantities needed to produce the end product. The BOM table allows you to create and work with Bills of Materials (or simply BOMs).',
+    dataTable: <IndicatorconstraintsPage />,
+    date: '2023-10-22T09:00:00',
+    read: true,
+    labels: ['NET', 'SIM']
+  },
+  {
+    id: '0400000',
+    name: 'Linear Ranges',
+    email: 'williamsmith@example.com',
+    subject: 'Meeting Tomorrow',
+    text: 'This table is used within the Network Optimization and Simulation experiments only. The table contains data on the CO2 emissions for each facility of the supply chain you are designing.The CO2 Emissions statistics contain the data the experiment gathered using this table.',
+    dataTable: <LinearrangesPage />,
+    date: '2023-10-22T09:00:00',
+    read: true,
+    labels: ['NET', 'SIM']
+  },
+  {
+    id: '0500000',
+    name: 'Objective Members',
+    email: 'williamsmith@example.com',
+    subject: 'Meeting Tomorrow',
+    text: 'This table is used within the Network Optimization and Simulation experiments only. Product processing within the supply chain results in certain volume of CO2 emissions. In the CO2 from Processing table, you define policies for calculating the amount of CO2 that will be produced while processing products. Product processing policy is set on the facility level and is applied based on the product and operation direction (inbound or outbound).',
+    dataTable: <ObjectivemembersPage />,
+    date: '2023-10-22T09:00:00',
+    read: true,
+    labels: ['NET', 'SIM']
+  },
+  {
+    id: '0600000',
+    name: 'Suppliers',
+    email: 'williamsmith@example.com',
+    subject: 'Meeting Tomorrow',
+    text: 'This table is used within the Simulation type of experiments only. It contains data on cash flows of the facilities in your supply chain. A cash account contains the initial cash of a facility (several facilities or a group of facilities) can spend, i.e., their cash on hand that can be spent on purchasing, processing and selling raw materials.\n\n The data from this and Payment Terms tables is used to collect Cash to Serve statistics, which allow you to analyze the amount of cash required for this supply chain to function properly.',
+    dataTable: <SuppliersPage />,
+    date: '2023-10-22T09:00:00',
+    read: true,
+    labels: ['SIM']
+  },
+  {
+    id: '0700000',
+    name: 'Unit Conversions',
+    email: 'williamsmith@example.com',
+    subject: 'Meeting Tomorrow',
+    text: 'This table is used within the Network Optimization experiment only. It is used to set conditions for the existing Product flows, Product storages and Production constraints by comparing the values to each other or to the constants created and defined here. The experiment does NETt consider the result of the expression if it does NETt satisfy the defined conditions.\n\n Custom constraints work as an expression with its left side value compared to the right side value per specified type of comparison.',
+    dataTable: <UnitConversionsPage />,
+    date: '2023-10-22T09:00:00',
+    read: true,
+    labels: ['NET']
+  },
+  {
     id: '0000020',
     name: 'Location Groups',
     email: 'bobjohnson@example.com',
@@ -168,17 +252,7 @@ export const allTables = [
     read: true,
     labels: ['NET', 'SIM']
   },
-  {
-    id: '0000001',
-    name: 'Assets Constraints',
-    email: 'williamsmith@example.com',
-    subject: 'Meeting Tomorrow',
-    text: 'This table is used within the Network Optimization experiment only. It allows you to define the range limiting the desired number of sites in your supply chain. The experiment will use this data to find the optimal number of sites (or supersites) and their locations.',
-    dataTable: <CustomersPage />,
-    date: '2023-10-22T09:00:00',
-    read: true,
-    labels: ['NET']
-  },
+ 
   {
     id: '0000002',
     name: 'BOM',
@@ -223,17 +297,7 @@ export const allTables = [
     read: true,
     labels: ['SIM']
   },
-  {
-    id: '0000006',
-    name: 'Custom Constraints',
-    email: 'williamsmith@example.com',
-    subject: 'Meeting Tomorrow',
-    text: 'This table is used within the Network Optimization experiment only. It is used to set conditions for the existing Product flows, Product storages and Production constraints by comparing the values to each other or to the constants created and defined here. The experiment does NETt consider the result of the expression if it does NETt satisfy the defined conditions.\n\n Custom constraints work as an expression with its left side value compared to the right side value per specified type of comparison.',
-    dataTable: <CustomersPage />,
-    date: '2023-10-22T09:00:00',
-    read: true,
-    labels: ['NET']
-  },
+  
 
   {
     id: '0000010',
@@ -280,17 +344,7 @@ export const allTables = [
     labels: ['COG', 'NET', 'SIM']
   },
 
-  {
-    id: '0000015',
-    name: 'Indicator Constraints',
-    email: 'bobjohnson@example.com',
-    subject: 'Weekend Plans',
-    text: 'This table is used within the Network Optimization experiment only. It uses the existing Linear Ranges (which set conditions for Custom Constraints, Product flows, Product storages, and Production Constraints) to define the If and Then statements in the corresponding columns.',
-    dataTable: <CustomersPage />,
-    date: '2023-04-10T11:45:00',
-    read: true,
-    labels: ['NET']
-  },
+ 
   {
     id: '0000016',
     name: 'Inventory',
@@ -302,17 +356,7 @@ export const allTables = [
     read: true,
     labels: ['COG', 'NET', 'SIM']
   },
-  {
-    id: '0000017',
-    name: 'Linear Ranges',
-    email: 'bobjohnson@example.com',
-    subject: 'Weekend Plans',
-    text: 'This table is used within the Network Optimization experiment only.\n\n Each record of this table is a condition that will be used by the Indicator Constraints table as an If or Then statement. \n\n To create a linear range you must define: \n\n Name of the new expression \n\n Expression itself \n\n The boundaries the expression must NETt violate',
-    dataTable: <CustomersPage />,
-    date: '2023-04-10T11:45:00',
-    read: true,
-    labels: ['NET']
-  },
+ 
   {
     id: '0000018',
     name: 'Loading and Unloading Gates',
@@ -335,17 +379,6 @@ export const allTables = [
     date: '2023-04-10T11:45:00',
     read: true,
     labels: ['COG', 'NET', 'SIM']
-  },
-  {
-    id: '0000022',
-    name: 'Objective Members',
-    email: 'bobjohnson@example.com',
-    subject: 'Weekend Plans',
-    text: 'This table is used within the Network Optimization experiment only. It is used to set members of the objective function by specifying coefficient for the existing Custom Constraints, Product flows, Product storages and Production constraints.\n\n The resulting value of the expressions will be available in the Objective Members statistics of the NET experiment results and you will be able to compare it to the experiment results.',
-    dataTable: <CustomersPage />,
-    date: '2023-04-10T11:45:00',
-    read: true,
-    labels: ['NET']
   },
   {
     id: '0000023',
@@ -525,17 +558,7 @@ export const allTables = [
     read: true,
     labels: ['COG']
   },
-  {
-    id: '0000041',
-    name: 'Suppliers',
-    email: 'bobjohnson@example.com',
-    subject: 'Weekend Plans',
-    text: 'This table allows you to specify product suppliers — external objects with infinite amount of any product in stock. We have NET control over this object, but we can gather its data for further analysis.\n\n The products selling price may be adjusted for the required objects.\n\n A Supplier may be used as a shadow object for a DC. This will allow the DC to have unlimited inventory (in case of NET scenario type).',
-    dataTable: <CustomersPage />,
-    date: '2023-04-10T11:45:00',
-    read: true,
-    labels: ['NET']
-  },
+
   {
     id: '0000042',
     name: 'Tariffs',
@@ -557,17 +580,6 @@ export const allTables = [
     date: '2023-04-10T11:45:00',
     read: true,
     labels: ['COG', 'NET', 'SIM']
-  },
-  {
-    id: '0000044',
-    name: 'Unit Conversions',
-    email: 'bobjohnson@example.com',
-    subject: 'Weekend Plans',
-    text: 'The Unit Conversions table is used to create conversions for the user-defined measurement units (of weight, volume, pcs, and units previously created in the Units table) that will be used exclusively within the current scenario. This conversion refers to a specific product, and there can be only one unit conversion per table record.',
-    dataTable: <CustomersPage />,
-    date: '2023-04-10T11:45:00',
-    read: true,
-    labels: ['NET']
   },
 
   {
