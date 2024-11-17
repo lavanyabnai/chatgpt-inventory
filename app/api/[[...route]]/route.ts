@@ -27,17 +27,8 @@ import indicatorConstraints from './indicatorconstraints';
 import objectiveMembers from './objectivemembers';
 import unitconversions from './unitconversions'
 import processingcosts from './processingcost'
+
 import boms from './boms';
-import cashAccounts from './cashaccounts';
-import facilityExpenses from './facilityexpenses';
-import salesbatches from './salesbatches';
-import co2Emissions from './co2facilities';
-import co2Processings from './co2processings';
-import bomComponents from './bomcomponents';
-import locationGroups from './locationgroups';
-import demandForecasts from './demandforecasts';
-import paymentTerms from './paymentterms';
-import vehicleSelections from './vehicleselections';
 export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
@@ -70,17 +61,7 @@ const routes = app
   .route('/objectivemembers', objectiveMembers)
   .route('/unitconversions', unitconversions)
   .route('/processingcosts', processingcosts)
-  .route('/boms', boms)
-  .route('/cashaccounts', cashAccounts)
-  .route('/facilityexpenses', facilityExpenses)
-  .route('/salesbatches', salesbatches)
-  .route('/bomcomponents', bomComponents)
-  .route('/co2facilities', co2Emissions)
-  .route('/co2processings', co2Processings)
-  .route('/demandforecasts', demandForecasts)
-  .route('/locationgroups', locationGroups)
-  .route('/paymentterms', paymentTerms)
-  .route('/vehicleselections', vehicleSelections);
+  .route('/boms', boms);
 
 export const GET = handle(app);
 export const POST = handle(app);
