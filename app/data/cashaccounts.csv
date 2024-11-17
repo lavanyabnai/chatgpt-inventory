@@ -1,0 +1,6 @@
+name,facilityId,initialCash,currency,interest
+Bank,33,2,USD,3
+Bank,35,3,USD,4
+Bank,35,4,USD,5
+Bank,36,5,USD,6
+Bank,39,6,USD,7

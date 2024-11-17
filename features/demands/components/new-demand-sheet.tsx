@@ -52,13 +52,7 @@ export const NewDemandSheet = () => {
   const customerMutation = { isPending: false }; // Replace with actual mutation
   const productMutation = { isPending: false }; // Replace with actual mutation
   const timePeriodMutation = { isPending: false }; // Replace with actual mutation
-  // const onCreateLocation = (name: string) => {
-  //   // Implement location creation logic
-  // };
-  // const locationOptions = (locationQuery.data ?? []).map((location) => ({
-  //   label: location.name,
-  //   value: location.id
-  // }));
+
   const customerOptions = (customerQuery.data ?? []).map((customer) => ({
     label: customer.name,
     value: customer.id

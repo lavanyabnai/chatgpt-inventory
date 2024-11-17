@@ -124,14 +124,14 @@ export const ObjectivememberForm = ({
               <FormLabel>Add To Objective</FormLabel>
               <FormControl>
               <Select
-options={[
-  { label: "True", value: "true" },
-  { label: "False", value: "false" }
-]}
-value={field.value ? "true" : "false"} // Convert boolean to string
-onChange={(value) => field.onChange(value === "true")} // Convert selected value to boolean
-disabled={disabled}
-placeholder="Select True or False"
+               options={[
+                 { label: "True", value: "true" },
+                    { label: "False", value: "false" }
+                                             ]}
+                      value={field.value ? "true" : "false"} // Convert boolean to string
+                      onChange={(value) => field.onChange(value === "true")} // Convert selected value to boolean
+                      disabled={disabled}
+                      placeholder="Select True or False"
                     />
               </FormControl>
               <FormMessage />
